@@ -46,3 +46,16 @@ class Blockchain(object):
   def last_block(self):
     # チェーンの最後のブロックを返す
     return self.chain[-1]
+
+  def proof_of_work(self, last_proof):
+    proof = 0
+    while self.valid_proof(last_proof, proof) is False:
+      proof += 1
+
+    return proof
+
+  @staticmethod
+  def valid_proof(last_proof, proof):
+    guess = f'{last_proof}{proof}'.encode()
+    guess_hash = hashlib.sha256(guess).hexdigest()
+    return guess_hash[0:4] == "0000" # ハッシュ値の先頭で合致する0の数を変えることで、難易度の調整ができる
